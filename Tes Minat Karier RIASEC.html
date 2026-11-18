@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Tes Minat Karier RIASEC (Holland Codes)</title>
+  <meta name="description" content="Tes minat karier RIASEC untuk menemukan kode Holland dan rekomendasi profesi serta jurusan yang cocok.">
+  <style>
+:root{
+  --ink:#1b2340; --ink-2:#4a5373; --muted:#7a82a0;
+  --bg:#f3f5fb; --surface:#ffffff; --line:#e1e5f0;
+  --brand:#2f3fa8; --brand-dark:#222f82; --brand-soft:#e8ebfb;
+  --danger:#c0392b; --danger-soft:#fdecea;
+  --c-R:#d9622b; --c-I:#2f7fc1; --c-A:#9b4fc4; --c-S:#2a9d6e; --c-E:#d4a017; --c-C:#5b6b8c;
+  --radius:16px; --radius-sm:10px;
+  --shadow:0 1px 2px rgba(27,35,64,.05),0 8px 24px rgba(27,35,64,.06);
+  --font-body:"Segoe UI",system-ui,-apple-system,Roboto,"Helvetica Neue",Arial,sans-serif;
+  --font-head:"Iowan Old Style","Palatino Linotype",Palatino,Georgia,serif;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.6 var(--font-body);-webkit-font-smoothing:antialiased}
+[hidden]{display:none!important}
+.screen{max-width:760px;margin:0 auto;padding:24px 16px 64px}
+h1,h2,h3{font-family:var(--font-head);line-height:1.2;margin:0 0 .5em;font-weight:700}
+h1{font-size:clamp(1.9rem,6vw,2.7rem)}
+h2{font-size:1.35rem}
+h3{font-size:1.15rem}
+p{margin:0 0 1em}
+
+.hero{text-align:center;padding:32px 8px 24px}
+.hero .lead{max-width:54ch;margin:0 auto;color:var(--ink-2);font-size:1.05rem}
+.kicker{color:var(--muted);margin-bottom:.25em}
+.hex{width:132px;height:132px;margin-bottom:12px}
+.hex-shape{fill:var(--brand-soft);stroke:var(--brand);stroke-width:3;stroke-linejoin:round}
+.hex-letters text{font:700 20px var(--font-head);fill:var(--brand);text-anchor:middle;dominant-baseline:middle}
+
+.card{background:var(--surface);border-radius:var(--radius);box-shadow:var(--shadow);padding:24px;margin-bottom:20px}
+.card.note{color:var(--ink-2)}
+
+.dims{list-style:none;margin:0;padding:0;display:grid;gap:12px;grid-template-columns:1fr}
+.dims li{display:flex;gap:14px;align-items:flex-start}
+.badge{flex:none;width:40px;height:40px;border-radius:50%;display:grid;place-items:center;color:#fff;font:700 1.1rem var(--font-head)}
+.dims strong{display:block;line-height:1.3}
+.dims span.d{color:var(--ink-2);font-size:.95rem}
+.steps{padding-left:1.2em;margin:0 0 20px;color:var(--ink-2)}
+.steps li{margin-bottom:.5em}
+
+.btn{font:600 1rem var(--font-body);border:0;border-radius:999px;padding:13px 28px;cursor:pointer;transition:background .15s,transform .1s}
+.btn:active{transform:scale(.98)}
+.btn.primary{background:var(--brand);color:#fff}
+.btn.primary:hover{background:var(--brand-dark)}
+.btn.ghost{background:transparent;color:var(--brand);box-shadow:inset 0 0 0 2px var(--brand)}
+.btn.ghost:hover{background:var(--brand-soft)}
+.btn.block{width:100%;padding:16px}
+:focus-visible{outline:3px solid var(--brand);outline-offset:3px}
+
+/* Progress */
+.progress-wrap{position:sticky;top:0;z-index:10;background:var(--bg);padding:12px 0 14px;margin-bottom:8px}
+.progress-info{display:flex;justify-content:space-between;font-size:.92rem;color:var(--ink-2);margin-bottom:6px}
+.progress{height:10px;background:var(--line);border-radius:999px;overflow:hidden}
+.progress-bar{height:100%;width:0;background:var(--brand);border-radius:999px;transition:width .3s ease}
+
+/* Soal */
+.q{background:var(--surface);border-radius:var(--radius);box-shadow:var(--shadow);padding:20px;margin-bottom:14px;border:2px solid transparent;transition:border-color .2s,background .2s;scroll-margin-top:90px}
+.q.missing{border-color:var(--danger);background:var(--danger-soft)}
+.q-text{font-weight:600;margin-bottom:14px}
+.q-text .no{color:var(--muted);font-weight:500;margin-right:6px}
+.likert{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;border:0;padding:0;margin:0}
+.likert label{position:relative;cursor:pointer;text-align:center}
+.likert input{position:absolute;opacity:0;inset:0;width:100%;height:100%;margin:0;cursor:pointer}
+.likert .dot{display:grid;place-items:center;height:48px;border-radius:var(--radius-sm);background:var(--bg);border:2px solid var(--line);font-weight:700;color:var(--ink-2);transition:all .15s}
+.likert label:hover .dot{border-color:var(--brand)}
+.likert input:checked + .dot{background:var(--brand);border-color:var(--brand);color:#fff}
+.likert input:focus-visible + .dot{outline:3px solid var(--brand);outline-offset:2px}
+.scale-hint{display:flex;justify-content:space-between;font-size:.78rem;color:var(--muted);margin-top:8px}
+.form-error{background:var(--danger-soft);color:var(--danger);border-radius:var(--radius-sm);padding:12px 16px;font-weight:600}
+
+/* Hasil */
+.code{font-size:clamp(3rem,16vw,5.5rem);letter-spacing:.12em;color:var(--brand);margin-bottom:.1em;padding-left:.12em}
+.chart{display:grid;gap:14px}
+.row{display:grid;grid-template-columns:minmax(96px,150px) 1fr 48px;align-items:center;gap:10px}
+.row .lbl{font-weight:600;font-size:.95rem;line-height:1.25}
+.row .lbl small{display:block;color:var(--muted);font-weight:400}
+.track{height:22px;background:var(--bg);border-radius:999px;overflow:hidden}
+.fill{height:100%;width:0;border-radius:999px;transition:width .9s cubic-bezier(.2,.7,.2,1)}
+.row .val{text-align:right;font-weight:700}
+.type-head{display:flex;align-items:center;gap:14px;margin-bottom:12px}
+.type-head h3{margin:0}
+.type-head small{color:var(--muted);display:block;font-family:var(--font-body);font-weight:400}
+.cols{display:grid;gap:16px;grid-template-columns:1fr}
+.cols h4{margin:0 0 6px;font-size:.95rem;color:var(--ink-2)}
+.tags{display:flex;flex-wrap:wrap;gap:6px;list-style:none;margin:0;padding:0}
+.tags li{background:var(--brand-soft);color:var(--brand-dark);border-radius:999px;padding:4px 12px;font-size:.88rem}
+.actions{display:flex;gap:12px;flex-wrap:wrap}
+
+@media(min-width:620px){
+  .screen{padding:40px 24px 80px}
+  .dims{grid-template-columns:1fr 1fr;gap:18px 24px}
+  .cols{grid-template-columns:1fr 1fr}
+  .likert .dot{height:52px}
+}
+@media(max-width:420px){
+  .card,.q{padding:16px}
+  .row{grid-template-columns:90px 1fr 42px}
+}
+@media(prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important}}
+@media print{.progress-wrap,.actions{display:none}body{background:#fff}.card{box-shadow:none;border:1px solid var(--line)}}
+
+:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);color-scheme:light dark}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+.progress-wrap{top:env(safe-area-inset-top,0px)}
+body{min-height:100vh}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);background:var(--bg);z-index:11}
+@media (prefers-color-scheme:dark){
+ :root:not([data-theme="light"]){--ink:#e8ebf7;--ink-2:#b4bad3;--muted:#8d94b3;--bg:#12162b;--surface:#1c2140;--line:#2e3558;--brand:#8fa0ff;--brand-dark:#a9b6ff;--brand-soft:#262d57;--danger:#ff8a7a;--danger-soft:#3a1f28}
+ :root:not([data-theme="light"]) .btn.primary{color:#12162b}
+ :root:not([data-theme="light"]) .likert input:checked + .dot{color:#12162b}
+ :root:not([data-theme="light"]) .progress-bar{background:var(--brand)}
+}
+:root[data-theme="dark"]{--ink:#e8ebf7;--ink-2:#b4bad3;--muted:#8d94b3;--bg:#12162b;--surface:#1c2140;--line:#2e3558;--brand:#8fa0ff;--brand-dark:#a9b6ff;--brand-soft:#262d57;--danger:#ff8a7a;--danger-soft:#3a1f28}
+</style>
+</head>
+<body>
+
+<!-- 1. HALAMAN PEMBUKA -->
+<main id="intro" class="screen">
+  <header class="hero">
+    <svg class="hex" viewBox="0 0 200 200" aria-hidden="true">
+      <polygon points="100,12 176,56 176,144 100,188 24,144 24,56" class="hex-shape"/>
+      <g class="hex-letters">
+        <text x="100" y="40">R</text><text x="160" y="76">I</text><text x="160" y="136">A</text>
+        <text x="100" y="172">S</text><text x="40" y="136">E</text><text x="40" y="76">C</text>
+      </g>
+    </svg>
+    <h1>Tes Minat Karier RIASEC</h1>
+    <p class="lead">Temukan kode Holland 3 huruf yang menggambarkan minatmu, lalu lihat profesi dan jurusan yang paling sejalan.</p>
+  </header>
+
+  <section class="card">
+    <h2>Enam tipe minat</h2>
+    <ul class="dims" id="dimList"></ul>
+  </section>
+
+  <section class="card">
+    <h2>Cara mengisi</h2>
+    <ol class="steps">
+      <li>Baca setiap pernyataan, lalu pilih angka 1–5 yang paling menggambarkan dirimu.</li>
+      <li>Skala: <strong>1</strong> Sangat Tidak Setuju, <strong>2</strong> Tidak Setuju, <strong>3</strong> Netral, <strong>4</strong> Setuju, <strong>5</strong> Sangat Setuju.</li>
+      <li>Jawab sesuai minat sebenarnya, bukan kemampuan atau apa yang dianggap ideal. Tidak ada jawaban benar atau salah.</li>
+      <li>Semua <span id="totalQ">24</span> nomor harus terisi sebelum kamu bisa melihat hasil. Waktu pengerjaan sekitar 5 menit.</li>
+    </ol>
+    <button class="btn primary" id="startBtn" type="button">Mulai tes</button>
+  </section>
+</main>
+
+<!-- 2. KUESIONER -->
+<main id="quiz" class="screen" hidden>
+  <div class="progress-wrap">
+    <div class="progress-info">
+      <span><strong id="answered">0</strong> dari <span id="total">24</span> soal terjawab</span>
+      <span id="pct">0%</span>
+    </div>
+    <div class="progress" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="Progres pengisian">
+      <div class="progress-bar" id="bar"></div>
+    </div>
+  </div>
+
+  <form id="form" novalidate>
+    <div id="questions"></div>
+    <p id="formError" class="form-error" role="alert" hidden></p>
+    <button class="btn primary block" type="submit">Lihat hasil</button>
+  </form>
+</main>
+
+<!-- 3. HASIL -->
+<main id="result" class="screen" hidden>
+  <header class="hero">
+    <p class="kicker">Kode Holland kamu</p>
+    <h1 class="code" id="holland" aria-live="polite"></h1>
+    <p class="lead" id="codeName"></p>
+  </header>
+
+  <section class="card">
+    <h2>Skor per dimensi</h2>
+    <div id="chart" class="chart"></div>
+  </section>
+
+  <div id="top3"></div>
+
+  <section class="card note">
+    <p>Tes ini adalah alat refleksi diri, bukan penentu masa depan. Gunakan hasilnya sebagai bahan diskusi dengan guru BK, dosen, atau konselor karier.</p>
+    <div class="actions">
+      <button class="btn primary" id="retryBtn" type="button">Ulangi tes</button>
+      <button class="btn ghost" id="printBtn" type="button">Cetak hasil</button>
+    </div>
+  </section>
+</main>
+
+<script>
+'use strict';
+
+/* ---------- DATA ---------- */
+const DIMENSIONS = {
+  R: { name: 'Realistic', id: 'Praktis / Teknis', color: 'var(--c-R)',
+    short: 'Suka bekerja dengan alat, mesin, tanaman, hewan, dan aktivitas fisik di lapangan.',
+    desc: 'Kamu orang yang praktis dan suka hasil nyata. Kamu nyaman bekerja dengan tangan, memperbaiki, membangun, atau beraktivitas di luar ruangan, dan lebih menyukai tugas konkret daripada teori abstrak.',
+    jobs: ['Teknisi mesin', 'Insinyur sipil', 'Pilot', 'Petani / agronom', 'Elektrikal', 'Arsitek lapangan', 'Polisi / TNI', 'Chef'],
+    majors: ['Teknik Mesin', 'Teknik Sipil', 'Teknik Elektro', 'Agroteknologi', 'Kehutanan', 'Teknik Perkapalan'] },
+  I: { name: 'Investigative', id: 'Penyelidik / Analitis', color: 'var(--c-I)',
+    short: 'Suka meneliti, menganalisis, memecahkan masalah, dan memahami cara kerja sesuatu.',
+    desc: 'Kamu penuh rasa ingin tahu dan suka berpikir mendalam. Kamu menikmati riset, data, sains, dan teka-teki logika, serta cenderung mandiri dalam mencari jawaban.',
+    jobs: ['Peneliti', 'Dokter', 'Data scientist', 'Apoteker', 'Ahli lab', 'Programmer', 'Ahli geologi', 'Analis riset'],
+    majors: ['Kedokteran', 'Farmasi', 'Matematika / Statistika', 'Fisika / Kimia / Biologi', 'Ilmu Komputer', 'Teknologi Pangan'] },
+  A: { name: 'Artistic', id: 'Artistik / Kreatif', color: 'var(--c-A)',
+    short: 'Suka berekspresi lewat seni, desain, musik, tulisan, dan ide orisinal.',
+    desc: 'Kamu imajinatif, ekspresif, dan menyukai kebebasan berkarya. Kamu bekerja terbaik di lingkungan yang fleksibel, tanpa aturan kaku, dan menghargai orisinalitas.',
+    jobs: ['Desainer grafis', 'Penulis / jurnalis', 'Musisi', 'Animator', 'Fotografer', 'Arsitek', 'Content creator', 'Sutradara'],
+    majors: ['Desain Komunikasi Visual', 'Arsitektur', 'Seni Musik', 'Film & Televisi', 'Sastra', 'Desain Produk'] },
+  S: { name: 'Social', id: 'Sosial', color: 'var(--c-S)',
+    short: 'Suka membantu, mengajar, merawat, dan bekerja sama dengan orang lain.',
+    desc: 'Kamu hangat, empatik, dan peduli pada orang lain. Kamu senang mengajar, mendampingi, dan menyelesaikan masalah lewat komunikasi serta kerja sama.',
+    jobs: ['Guru / dosen', 'Psikolog', 'Konselor', 'Perawat', 'Pekerja sosial', 'Penyuluh kesehatan', 'HRD', 'Terapis'],
+    majors: ['Pendidikan', 'Psikologi', 'Keperawatan', 'Kesejahteraan Sosial', 'Kesehatan Masyarakat', 'Ilmu Komunikasi'] },
+  E: { name: 'Enterprising', id: 'Wirausaha / Persuasif', color: 'var(--c-E)',
+    short: 'Suka memimpin, meyakinkan, mengambil risiko, dan mengejar target bisnis.',
+    desc: 'Kamu percaya diri, ambisius, dan suka memimpin. Kamu menikmati negosiasi, mempengaruhi orang lain, dan mengubah ide menjadi usaha atau pencapaian yang besar.',
+    jobs: ['Wirausahawan', 'Manajer', 'Marketing', 'Pengacara', 'Politisi', 'Sales', 'Konsultan bisnis', 'Event organizer'],
+    majors: ['Manajemen', 'Bisnis', 'Ilmu Hukum', 'Ilmu Politik', 'Hubungan Internasional', 'Pariwisata'] },
+  C: { name: 'Conventional', id: 'Konvensional / Teratur', color: 'var(--c-C)',
+    short: 'Suka data, angka, aturan, dan pekerjaan yang rapi serta terstruktur.',
+    desc: 'Kamu teliti, rapi, dan dapat diandalkan. Kamu nyaman dengan prosedur yang jelas, mengelola data dan administrasi, serta memastikan semuanya berjalan akurat.',
+    jobs: ['Akuntan', 'Auditor', 'Analis keuangan', 'Administrator', 'Pustakawan', 'Staf perbankan', 'Sekretaris', 'Analis pajak'],
+    majors: ['Akuntansi', 'Perbankan & Keuangan', 'Administrasi Bisnis', 'Manajemen Informatika', 'Perpajakan', 'Ilmu Perpustakaan'] }
+};
+const ORDER = ['R', 'I', 'A', 'S', 'E', 'C'];
+
+// 4 pernyataan per dimensi = 24 soal, diacak seimbang
+const QUESTIONS = [
+  ['R', 'Saya senang memperbaiki atau merakit barang, seperti sepeda, motor, atau perangkat elektronik.'],
+  ['I', 'Saya suka mencari tahu penyebab dari suatu masalah sampai tuntas.'],
+  ['A', 'Saya menikmati menggambar, menulis, bermusik, atau membuat karya kreatif lainnya.'],
+  ['S', 'Saya senang membantu orang lain yang sedang kesulitan.'],
+  ['E', 'Saya suka memimpin kelompok untuk mencapai suatu tujuan.'],
+  ['C', 'Saya merasa nyaman merapikan data, dokumen, atau catatan keuangan.'],
+  ['R', 'Saya lebih suka bekerja di luar ruangan atau di bengkel daripada duduk di kantor.'],
+  ['I', 'Saya tertarik membaca artikel sains atau melakukan percobaan.'],
+  ['A', 'Saya lebih suka pekerjaan yang membebaskan saya mengungkapkan ide orisinal.'],
+  ['S', 'Saya mudah mendengarkan dan memahami perasaan orang lain.'],
+  ['E', 'Saya suka meyakinkan orang lain untuk menerima ide atau produk saya.'],
+  ['C', 'Saya lebih nyaman bekerja dengan langkah dan aturan yang jelas.'],
+  ['R', 'Saya tertarik menggunakan alat, mesin, atau teknologi praktis untuk menyelesaikan pekerjaan.'],
+  ['I', 'Saya senang menganalisis data, angka, atau pola untuk menemukan kesimpulan.'],
+  ['A', 'Saya sering memperhatikan keindahan tampilan, warna, dan desain.'],
+  ['S', 'Saya senang mengajar atau menjelaskan sesuatu kepada orang lain.'],
+  ['E', 'Saya berani mengambil risiko demi peluang usaha atau hasil yang besar.'],
+  ['C', 'Saya teliti dan jarang melewatkan detail kecil dalam pekerjaan.'],
+  ['R', 'Saya menikmati aktivitas fisik, seperti membangun, berkebun, atau merawat hewan.'],
+  ['I', 'Saya suka memecahkan soal logika, teka-teki, atau masalah yang rumit.'],
+  ['A', 'Saya suka tampil, bercerita, atau berkreasi di depan orang banyak.'],
+  ['S', 'Saya lebih suka bekerja dalam tim yang saling mendukung daripada bekerja sendirian.'],
+  ['E', 'Saya suka bernegosiasi dan merencanakan strategi untuk menang.'],
+  ['C', 'Saya suka membuat jadwal, daftar, atau sistem agar semuanya teratur.']
+];
+const TOTAL = QUESTIONS.length;
+const MAX_PER_DIM = (TOTAL / 6) * 5;
+
+/* ---------- HELPER ---------- */
+const $ = (id) => document.getElementById(id);
+const answers = new Array(TOTAL).fill(null);
+
+function show(screenId) {
+  ['intro', 'quiz', 'result'].forEach((s) => ($(s).hidden = s !== screenId));
+  window.scrollTo({ top: 0, behavior: 'auto' });
+}
+
+/* ---------- RENDER ---------- */
+function renderIntro() {
+  $('totalQ').textContent = TOTAL;
+  $('total').textContent = TOTAL;
+  $('dimList').innerHTML = ORDER.map((k) => {
+    const d = DIMENSIONS[k];
+    return `<li><span class="badge" style="background:${d.color}">${k}</span>
+      <div><strong>${d.name} <span style="font-weight:400;color:var(--muted)">(${d.id})</span></strong>
+      <span class="d">${d.short}</span></div></li>`;
+  }).join('');
+}
+
+function renderQuestions() {
+  $('questions').innerHTML = QUESTIONS.map(([, text], i) => {
+    const opts = [1, 2, 3, 4, 5].map((v) =>
+      `<label><input type="radio" name="q${i}" value="${v}" aria-label="${v}"><span class="dot">${v}</span></label>`
+    ).join('');
+    return `<div class="q" id="q${i}" data-i="${i}">
+      <p class="q-text" id="qt${i}"><span class="no">${i + 1}.</span>${text}</p>
+      <fieldset class="likert" aria-labelledby="qt${i}">${opts}</fieldset>
+      <div class="scale-hint"><span>Sangat tidak setuju</span><span>Sangat setuju</span></div>
+    </div>`;
+  }).join('');
+}
+
+function updateProgress() {
+  const n = answers.filter((a) => a !== null).length;
+  const p = Math.round((n / TOTAL) * 100);
+  $('answered').textContent = n;
+  $('pct').textContent = p + '%';
+  $('bar').style.width = p + '%';
+  document.querySelector('.progress').setAttribute('aria-valuenow', p);
+}
+
+/* ---------- EVENT ---------- */
+$('questions').addEventListener('change', (e) => {
+  if (e.target.type !== 'radio') return;
+  const i = Number(e.target.name.slice(1));
+  answers[i] = Number(e.target.value);
+  $('q' + i).classList.remove('missing');
+  updateProgress();
+  if (answers.every((a) => a !== null)) $('formError').hidden = true;
+});
+
+$('startBtn').addEventListener('click', () => show('quiz'));
+
+$('form').addEventListener('submit', (e) => {
+  e.preventDefault();
+  const missing = answers.map((a, i) => (a === null ? i : -1)).filter((i) => i >= 0);
+  document.querySelectorAll('.q').forEach((q) => q.classList.toggle('missing', missing.includes(Number(q.dataset.i))));
+  if (missing.length) {
+    const err = $('formError');
+    err.textContent = `Masih ada ${missing.length} soal yang belum diisi (nomor ${missing.map((i) => i + 1).join(', ')}). Lengkapi dulu untuk melihat hasil.`;
+    err.hidden = false;
+    const first = $('q' + missing[0]);
+    first.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    first.querySelector('input').focus({ preventScroll: true });
+    return;
+  }
+  showResult();
+});
+
+$('retryBtn').addEventListener('click', () => {
+  answers.fill(null);
+  $('form').reset();
+  document.querySelectorAll('.q').forEach((q) => q.classList.remove('missing'));
+  $('formError').hidden = true;
+  updateProgress();
+  show('intro');
+});
+$('printBtn').addEventListener('click', () => window.print());
+
+/* ---------- HASIL ---------- */
+function calculate() {
+  const scores = Object.fromEntries(ORDER.map((k) => [k, 0]));
+  QUESTIONS.forEach(([k], i) => (scores[k] += answers[i]));
+  return ORDER.map((k) => ({ key: k, score: scores[k], pct: Math.round((scores[k] / MAX_PER_DIM) * 100) }))
+    // urut skor tertinggi; jika sama, ikuti urutan R-I-A-S-E-C
+    .sort((a, b) => b.score - a.score || ORDER.indexOf(a.key) - ORDER.indexOf(b.key));
+}
+
+function showResult() {
+  const ranked = calculate();
+  const code = ranked.slice(0, 3).map((r) => r.key).join('');
+  $('holland').textContent = code;
+  $('codeName').textContent = ranked.slice(0, 3).map((r) => DIMENSIONS[r.key].name).join(' · ');
+
+  $('chart').innerHTML = ranked.map((r) => {
+    const d = DIMENSIONS[r.key];
+    return `<div class="row"><div class="lbl">${r.key} · ${d.name}<small>${r.score} / ${MAX_PER_DIM}</small></div>
+      <div class="track"><div class="fill" data-w="${r.pct}" style="background:${d.color}"></div></div>
+      <div class="val">${r.pct}%</div></div>`;
+  }).join('');
+
+  $('top3').innerHTML = ranked.slice(0, 3).map((r, i) => {
+    const d = DIMENSIONS[r.key];
+    return `<section class="card">
+      <div class="type-head"><span class="badge" style="background:${d.color}">${r.key}</span>
+        <h3>${d.name}<small>Peringkat ${i + 1} · ${d.id} · ${r.pct}%</small></h3></div>
+      <p>${d.desc}</p>
+      <div class="cols">
+        <div><h4>Profesi yang relevan</h4><ul class="tags">${d.jobs.map((j) => `<li>${j}</li>`).join('')}</ul></div>
+        <div><h4>Jurusan yang relevan</h4><ul class="tags">${d.majors.map((m) => `<li>${m}</li>`).join('')}</ul></div>
+      </div></section>`;
+  }).join('');
+
+  show('result');
+  requestAnimationFrame(() => requestAnimationFrame(() =>
+    document.querySelectorAll('.fill').forEach((f) => (f.style.width = f.dataset.w + '%'))));
+}
+
+/* ---------- INIT ---------- */
+renderIntro();
+renderQuestions();
+updateProgress();
+
+</script>
+</body>
+</html>
